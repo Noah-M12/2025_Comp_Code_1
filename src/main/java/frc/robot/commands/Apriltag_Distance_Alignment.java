@@ -49,12 +49,18 @@ public class Apriltag_Distance_Alignment extends Command {
       // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+
+    // Switch to pipeline 0
+  LimelightHelpers.setPipelineIndex("", 0);
     //SmartDashboard.putNumber("Desired Distance", desired_distance);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    
 
     //Vision Math 
 
@@ -79,8 +85,8 @@ public class Apriltag_Distance_Alignment extends Command {
     //calculate distance 
 
     // Plug into  D =  (Known Field Height - Limelight from the Ground) / tan( Mounting Angle + Limelight Y Angle) 
-      distance_From_Limelight_To_Goal_Inches = (Apriltag_Height_Inches - limelight_Lens_From_Ground) 
-        / Math.tan(angleToGoalRadians); 
+    //  distance_From_Limelight_To_Goal_Inches = (Apriltag_Height_Inches - limelight_Lens_From_Ground) 
+      //  / Math.tan(angleToGoalRadians); 
 
     //Distance Error 
     // the reaons why there is a offset for the limelight and the bumper is because we can get even more accrute 

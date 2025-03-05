@@ -22,6 +22,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Intake_Lift;
+import frc.robot.commands.LimeLightTargeting;
 import frc.robot.commands.PrintTelemetry;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.Run_Shooter;
@@ -39,6 +40,10 @@ import frc.robot.commands.DriveTeleop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 
@@ -113,6 +118,7 @@ private final SendableChooser<Command> autoChooser;
     m_driverController.x().onTrue(new ResetGyro(m_robotDrive));
    // m_driverController.rightTrigger().whileTrue(new Run_Shooter(shooter, 0.15, 0.1));
     m_driverController.rightTrigger().whileTrue(new Run_Shooter(shooter, 0.15, 0.1));
+    m_driverController.y().whileTrue(new LimeLightTargeting(m_robotDrive, 0));
   }
   
   

@@ -4,13 +4,25 @@
 
 package frc.robot;
 
+import java.lang.ModuleLayer.Controller;
+
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.FieldCentric;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Pneunamatics;
+import frc.robot.LimelightHelpers; 
+import frc.robot.commands.Apriltag_Distance_Alignment;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.LimeLightTargeting;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -33,6 +45,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     FollowPathCommand.warmupCommand().schedule();
+    LimelightHelpers.setPipelineIndex("", 0);
     
 
   }
@@ -46,6 +59,36 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    LimelightHelpers.getTX(null);
+    double limelight_aim_proportional()
+    {    
+      // kP (constant of proportionality)
+      // if the robot never turns in the correct direction, kP should be inverted.
+      double kP = .035;
+  
+      // tx ranges from (-hfov/2) to (hfov/2) in degrees. If target is on the rightmost edge of 
+      // limelight 3A feed, tx should return roughly 31 degrees.
+      double targetingAngularVelocity = LimelightHelpers.getTX("limelight") * kP;
+  
+      // convert to radians per second for our drive method
+      targetingAngularVelocity *= DriveSubsystem.kMaxAngularSpeed;
+  
+      //invert since tx is positive when the target is to the right of the crosshair
+      targetingAngularVelocity *= -1.0;
+  
+      return targetingAngularVelocity;
+    }
+  
+    double limelight_range_proportional()
+    {    
+      double kP = .1;
+      double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kP;
+      targetingForwardSpeed *= DriveSubsystem.kMaxSpeed;
+      targetingForwardSpeed *= -1.0;
+      return targetingForwardSpeed;
+    }
+    
+    SmartDashboard.getData(targetingAngularVelocity());
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -96,7 +139,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+   
+  }
+  
+  
 
   @Override
   public void testInit() {

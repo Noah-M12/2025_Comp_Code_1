@@ -29,6 +29,8 @@ import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
+  public static final double kMaxSpeed = 3.0; // 3 meters per second
+  public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
